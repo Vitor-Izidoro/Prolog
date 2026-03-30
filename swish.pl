@@ -27,3 +27,15 @@ fatorial(N, F) :-
 
 % Exemplo de consulta:
 % ?- fatorial(5, F).    --- O resultado deve ser F = 120.
+
+% ============================================================
+
+% Exercício 3: Crie uma regra que verifica se uma lista é vazia.
+% NÃO SEI SE TA CERTO, PARECE SIMPLES DEMAIS
+lista_vazia([]).
+
+% Exemplo de consulta:
+% ?- lista_vazia([]).   --- Resultado = true
+% ?- lista_vazia([1,2,5,8]).   --- Resultado = false
+
+% ============================================================
