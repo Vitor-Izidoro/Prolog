@@ -40,73 +40,53 @@ lista_vazia([]).
 
 % ============================================================
 
-% exercicio 4
+% exercicio 4 
 
 % --- Predicado Principal ---
 % --- Operações ---
-aplicar(V1, op(+, V2), R) :- R is V1 + V2.
-aplicar(V1, op(-, V2), R) :- R is V1 - V2.
-aplicar(V1, op(*, V2), R) :- R is V1 * V2.
+aplicar(VALUE1, op(+, VALUE2), RESULTADO) :- RESULTADO is VALUE1 + VALUE2.
+aplicar(VALUE1, op(-, VALUE2), RESULTADO) :- RESULTADO is VALUE1 - VALUE2.
+aplicar(VALUE1, op(*, VALUE2), RESULTADO) :- RESULTADO is VALUE1 * VALUE2.
 
 % --- Matriz ---
-get_cell(B, R, C, V) :-
-    nth1(R, B, L),
-    nth1(C, L, V).
+get_cell(B, ROW, COLUMN, VALUE) :-
+    nth1(ROW, B, LIST),
+    nth1(COLUMN, LIST, VALUE).
 
-% --- Vizinhança (Reescrita sem espaços problemáticos) ---
-vizinho(R, C, NR, NC, N) :-
-    (   NR is R + 1, NC = C
-    ;   NR is R - 1, NC = C
-    ;   NR = R, NC is C + 1
-    ;   NR = R, NC is C - 1
+% --- Vizinhança ------
+vizinho(ROW, COLUMN, NEW_ROW, NEW_COLUMN, NUMBER_OF_LINES) :-
+    (   NEW_ROW is ROW + 1, NEW_COLUMN = COLUMN
+    ;   NEW_ROW is ROW - 1, NEW_COLUMN = COLUMN
+    ;   NEW_ROW = ROW, NEW_COLUMN is COLUMN + 1
+    ;   NEW_ROW = ROW, NEW_COLUMN is COLUMN - 1
     ),
-    NR >= 1,
-    NR =< N,   
-    NC >= 1,
-    NC =< N.
+    NEW_ROW >= 1,
+    NEW_ROW =< NUMBER_OF_LINES,   
+    NEW_COLUMN >= 1,
+    NEW_COLUMN =< NUMBER_OF_LINES.
 % --- Caminho ---
-caminho_hamiltoniano(_, N, Vis, _, _, Val, Val) :-
-    Total is N * N,
-    length(Vis, Total).
+caminho_hamiltoniano(_, NUMBER_OF_LINES, VISITATED, _, _, VALUE, VALUE) :-
+    Total is NUMBER_OF_LINES * NUMBER_OF_LINES,
+    length(VISITATED, Total).
 
-caminho_hamiltoniano(B, N, Vis, R, C, VAcum, VFin) :-
-    vizinho(R, C, NR, NC, N),
-    \+ member((NR, NC), Vis),
-    get_cell(B, NR, NC, Op),
+caminho_hamiltoniano(B, NUMBER_OF_LINES, VISITATED, ROW, COLUMN, VAcum, VFin) :-
+    vizinho(ROW, COLUMN, NEW_ROW, NEW_COLUMN, NUMBER_OF_LINES),
+    \+ member((NEW_ROW, NEW_COLUMN), VISITATED),
+    get_cell(B, NEW_ROW, NEW_COLUMN, Op),
     aplicar(VAcum, Op, NV),
-    caminho_hamiltoniano(B, N, [(NR, NC)|Vis], NR, NC, NV, VFin).
+    caminho_hamiltoniano(B, NUMBER_OF_LINES, [(NEW_ROW, NEW_COLUMN)|VISITATED], NEW_ROW, NEW_COLUMN, NV, VFin).
 
 % --- Principal ---
 board(B, Min, Qtd) :-
-    length(B, N),
-    findall(V, (
-        between(1, N, R), between(1, N, C),
-        get_cell(B, R, C, op(Op, Val)),
-        aplicar(0, op(Op, Val), VI),
-        caminho_hamiltoniano(B, N, [(R, C)], R, C, VI, V)
-    ), L),
-    min_list(L, Min),
-    aggregate_all(count, (member(X, L), X =:= Min), Qtd).
-
-% Versão que mostra o caminho exato
-board_com_caminho(Board, Minimo, Qtd, ExemploCaminho) :-
-    length(Board, N),
-    findall([VFinal, CaminhoReverso], (
-        between(1, N, R), between(1, N, C),
-        get_cell(Board, R, C, op(Op, Val)),
-        aplicar(0, op(Op, Val), VInit),
-        caminho_hamiltoniano(Board, N, [(R, C)], R, C, VInit, VFinal),
-        CaminhoReverso = [(R, C)|_] % Pega a lista de visitados
-    ), Resultados),
-    
-    % Encontra o minimo apenas nos valores (primeiro elemento da lista [V, C])
-    findall(V, member([V, _], Resultados), ApenasValores),
-    min_list(ApenasValores, Minimo),
-    
-    % Filtra os caminhos que batem com o minimo
-    findall(C, member([Minimo, C], Resultados), TodosCaminhos),
-    length(TodosCaminhos, Qtd),
-    nth1(1, TodosCaminhos, ExemploCaminho). % Mostra o primeiro dos dois caminhos
+    length(B, NUMBER_OF_LINES),
+    findall(VALUE, (
+        between(1, NUMBER_OF_LINES, ROW), between(1, NUMBER_OF_LINES, COLUMN),
+        get_cell(B, ROW, COLUMN, op(Op, Val)),
+        aplicar(0, op(Op, Val), INICIAL_VALUE),
+        caminho_hamiltoniano(B, NUMBER_OF_LINES, [(ROW, COLUMN)], ROW, COLUMN, INICIAL_VALUE, VALUE)
+    ), LIST),
+    min_list(LIST, Min),
+    aggregate_all(count, (member(X, LIST), X =:= Min), Qtd).minho). % Mostra o primeiro dos dois caminhos
 
 
 
