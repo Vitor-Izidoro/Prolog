@@ -112,3 +112,27 @@ palindrome([H|T]) :-
 % Exemplo de consulta:
 % ?- palindrome([1, 2, 3, 2, 1]).
 % ?- palindrome([r,a, d, a, r]).
+
+% exercicio 6 -- fibonacci
+fib(N, F) :- fib(N, 0, 1, F).
+
+fib(0, A, _, A).
+fib(N, A, B, F) :-
+    N > 0,
+    N1 is N - 1,
+    C is A + B,
+    fib(N1, B, C, F).
+
+% Exemplo de consulta:
+% ?- fib(10, F).    --- O resultado deve ser F = 55
+
+% exercicio 7 -- mdc
+
+mdc(A, 0, A) :- A > 0.
+mdc(A, B, MDC) :-
+    B > 0,
+    R is A mod B,
+    mdc(B, R, MDC).
+
+% Exemplo de consulta:
+% ?- mdc(48, 18, MDC).    --- O resultado deve ser MDC = 6
