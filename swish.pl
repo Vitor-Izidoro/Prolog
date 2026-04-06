@@ -102,14 +102,13 @@ board(B, Min, Qtd) :-
 %exercicio 5 --palindrome
 
 palindrome(Lista) :-
-    palindrome(Lista, Lista).
+    palindrome(Lista).
 
-palindrome([], _).
-palindrome([_], _).
-palindrome([H|T], [H|R]) :-
-    append(_, [H], T),   % último elemento de T também é H
-    palindrome(_, R).    % continua com o miolo
-
+palindrome([]).
+palindrome([_]).
+palindrome([H|T]) :-
+    append(Miolo, [H], T),
+    palindrome(Miolo).
 % Exemplo de consulta:
 % ?- palindrome([1, 2, 3, 2, 1]).
 % ?- palindrome([r,a, d, a, r]).
