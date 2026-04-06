@@ -60,6 +60,10 @@ tamanho_lista([_|T], N) :-
     tamanho_lista(T, N1),
     N is N1 + 1.
 
+tem_na_lista(X, [X|_]).
+tem_na_lista(X, [_|T]) :-
+    tem_na_lista(X, T).    
+
 % --- Matriz ---
 get_cell(B, ROW, COLUMN, VALUE) :-
     percorrer_lista(ROW, B, LIST),
@@ -83,7 +87,7 @@ caminho_hamiltoniano(_, NUMBER_OF_LINES, VISITATED, _, _, VALUE, VALUE) :-
 
 caminho_hamiltoniano(B, NUMBER_OF_LINES, VISITATED, ROW, COLUMN, VAcum, VFin) :-
     vizinho(ROW, COLUMN, NEW_ROW, NEW_COLUMN, NUMBER_OF_LINES),
-    \+ member((NEW_ROW, NEW_COLUMN), VISITATED),
+    \+ tem_na_lista((NEW_ROW, NEW_COLUMN), VISITATED),
     get_cell(B, NEW_ROW, NEW_COLUMN, Op),
     aplicar(VAcum, Op, NV),
     caminho_hamiltoniano(B, NUMBER_OF_LINES, [(NEW_ROW, NEW_COLUMN)|VISITATED], NEW_ROW, NEW_COLUMN, NV, VFin).
