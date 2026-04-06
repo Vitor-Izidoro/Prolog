@@ -48,10 +48,22 @@ aplicar(VALUE1, op(+, VALUE2), RESULTADO) :- RESULTADO is VALUE1 + VALUE2.
 aplicar(VALUE1, op(-, VALUE2), RESULTADO) :- RESULTADO is VALUE1 - VALUE2.
 aplicar(VALUE1, op(*, VALUE2), RESULTADO) :- RESULTADO is VALUE1 * VALUE2.
 
+
+percorrer_lista(1, [H|_], H).
+percorrer_lista(N, [_|T], VALUE) :-
+    N > 1,
+    N1 is N - 1,
+    percorrer_lista(N1, T, VALUE).
+
+tamanho_lista([], 0).
+tamanho_lista([_|T], N) :-
+    tamanho_lista(T, N1),
+    N is N1 + 1.
+
 % --- Matriz ---
 get_cell(B, ROW, COLUMN, VALUE) :-
-    nth1(ROW, B, LIST),
-    nth1(COLUMN, LIST, VALUE).
+    percorrer_lista(ROW, B, LIST),
+    percorrer_lista(COLUMN, LIST, VALUE).
 
 % --- Vizinhança ------
 vizinho(ROW, COLUMN, NEW_ROW, NEW_COLUMN, NUMBER_OF_LINES) :-
@@ -67,7 +79,7 @@ vizinho(ROW, COLUMN, NEW_ROW, NEW_COLUMN, NUMBER_OF_LINES) :-
 % --- Caminho ---
 caminho_hamiltoniano(_, NUMBER_OF_LINES, VISITATED, _, _, VALUE, VALUE) :-
     Total is NUMBER_OF_LINES * NUMBER_OF_LINES,
-    length(VISITATED, Total).
+    tamanho_lista(VISITATED, Total).
 
 caminho_hamiltoniano(B, NUMBER_OF_LINES, VISITATED, ROW, COLUMN, VAcum, VFin) :-
     vizinho(ROW, COLUMN, NEW_ROW, NEW_COLUMN, NUMBER_OF_LINES),
