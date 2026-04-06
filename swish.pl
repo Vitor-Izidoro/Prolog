@@ -109,3 +109,7 @@ palindrome([_], _).
 palindrome([H|T], [H|R]) :-
     append(_, [H], T),   % último elemento de T também é H
     palindrome(_, R).    % continua com o miolo
+
+% Exemplo de consulta:
+% ?- palindrome([1, 2, 3, 2, 1]).
+% ?- palindrome([r,a, d, a, r]).
