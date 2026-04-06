@@ -1,6 +1,7 @@
 # Lista de Exercícios: Prolog
 
 Repositório destinado à resolução da lista de exercícios de programação em Prolog.
+link para o site do prolog: https://swish.swi-prolog.org/example/swish_tutorials.swinb
 
 ## Status dos Exercícios
 
