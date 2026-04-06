@@ -133,3 +133,17 @@ mdc(A, B, MDC) :-
 
 % Exemplo de consulta:
 % ?- mdc(48, 18, MDC).    --- O resultado deve ser MDC = 6
+
+%exercicio 9 --palavra palindromo
+
+% Esta linha diz ao SWI-Prolog: "Trate aspas duplas como listas de caracteres"
+:- set_prolog_flag(double_quotes, chars).
+
+% A regra recebe a string, que agora o Prolog entende como a lista [r, a, d, a, r]
+palindromo(PalavraString) :-
+    inverter_raiz(PalavraString, [], PalavraString).
+
+% O acumulador que inverte a lista recursivamente
+inverter_raiz([], Acumulador, Acumulador).
+inverter_raiz([Cabeca | Cauda], Acumulador, Resultado) :-
+    inverter_raiz(Cauda, [Cabeca | Acumulador], Resultado).
