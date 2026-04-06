@@ -86,7 +86,7 @@ board(B, Min, Qtd) :-
         caminho_hamiltoniano(B, NUMBER_OF_LINES, [(ROW, COLUMN)], ROW, COLUMN, INICIAL_VALUE, VALUE)
     ), LIST),
     min_list(LIST, Min),
-    aggregate_all(count, (member(X, LIST), X =:= Min), Qtd).minho). % Mostra o primeiro dos dois caminhos
+    aggregate_all(count, (member(X, LIST), X =:= Min), Qtd).
 
 
 
@@ -100,9 +100,6 @@ board(B, Min, Qtd) :-
 
 
 %exercicio 5 --palindrome
-
-palindrome(Lista) :-
-    palindrome(Lista).
 
 palindrome([]).
 palindrome([_]).
