@@ -97,3 +97,15 @@ board(B, Min, Qtd) :-
 %          [op(*, 0), op(*, 133), op(+, 2), op(+, 19)],
 %          [op(+, 3), op(+,1000), op(+, 2), op(*, 3)]],
 %   board_com_caminho(Tab, Minimo, Quantidade, CAMINHO).
+
+
+%exercicio 5 --palindrome
+
+palindrome(Lista) :-
+    palindrome(Lista, Lista).
+
+palindrome([], _).
+palindrome([_], _).
+palindrome([H|T], [H|R]) :-
+    append(_, [H], T),   % último elemento de T também é H
+    palindrome(_, R).    % continua com o miolo
