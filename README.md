@@ -16,7 +16,7 @@ link para o site do prolog: https://swish.swi-prolog.org/example/swish_tutorials
 - [x] **Exercício 7:** Implemente uma regra que encontre o maior divisor comum (MDC) de dois números inteiros.
 - [ ] **Exercício 8:** Crie uma regra que verifica se um número é primo.
 - [x] **Exercício 9:** Escreva uma regra que verifica se uma palavra é um palíndromo.
-- [ ] **Exercício 10:** Predicado `triangle/1`.
+- [x] **Exercício 10:** Predicado `triangle/1`.
   > **Detalhes:** O argumento é uma lista `L` de caracteres (átomos de comprimento 1). O predicado desenha um conjunto de triângulos, que se encaixam uns dentro dos outros, e cujas circunferências são desenhadas com o caractere subsequente da lista `L`.
 
 ---
