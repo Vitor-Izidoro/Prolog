@@ -134,6 +134,26 @@ mdc(A, B, MDC) :-
 % Exemplo de consulta:
 % ?- mdc(48, 18, MDC).    --- O resultado deve ser MDC = 6
 
+%exercicio 8 --verificador de número primo
+
+primo(2).
+% Para qualquer número N maior que 2, ele é primo SE NÃO for verdade que ele tem um divisor começando a testar do 2.
+primo(N) :-
+    N > 2,
+    \+ tem_divisor(N, 2).
+
+% --- REGRAS AUXILIARES DE DIVISÃO ---
+
+tem_divisor(N, DivisorAtual) :-
+    N mod DivisorAtual =:= 0.
+
+% Condição 2: Não dividiu? Tenta o próximo número.
+tem_divisor(N, DivisorAtual) :-
+    % Otimização matemática: só precisamos testar até a raiz quadrada de N.
+    % Se Divisor * Divisor ultrapassar N, não faz sentido continuar testando.
+    DivisorAtual * DivisorAtual < N,
+    ProximoDivisor is DivisorAtual + 1,
+    tem_divisor(N, ProximoDivisor).
 %exercicio 9 --palavra palindromo
 
 % Esta linha diz ao SWI-Prolog: "Trate aspas duplas como listas de caracteres"
