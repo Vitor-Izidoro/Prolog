@@ -147,3 +147,57 @@ palindromo(PalavraString) :-
 inverter_raiz([], Acumulador, Acumulador).
 inverter_raiz([Cabeca | Cauda], Acumulador, Resultado) :-
     inverter_raiz(Cauda, [Cabeca | Acumulador], Resultado).
+
+
+%exercicio 10 -- triangulo palindromo
+
+% --- Linha de subida: palíndromo simples ---
+make_row_up([X], [X]) :- !.
+make_row_up(Prefix, Pal) :-
+    reverse(Prefix, [_ | Rev]),
+    append(Prefix, Rev, Pal).
+
+% --- Linha de descida: borda + repetição + espelho ---
+make_row_down(Prefix, TotalLen, Pal) :-
+    reverse(Prefix, [_ | RevTail]),
+    length(Prefix, PLen),
+    length(RevTail, RLen),
+    MiddleCount is TotalLen - PLen - RLen,
+    last(Prefix, Last),
+    length(MiddleList, MiddleCount),
+    maplist(=(Last), MiddleList),
+    append(Prefix, MiddleList, Tmp),
+    append(Tmp, RevTail, Pal).
+
+% --- Espaços ---
+print_spaces(0) :- !.
+print_spaces(N) :-
+    N > 0, write('-'),
+    N1 is N - 1,
+    print_spaces(N1).
+
+% --- Predicado principal ---
+triangle(Base) :-
+    length(Base, N),
+    TotalRows is 2 * N - 1,
+    MaxChars is 2 * TotalRows - 1,       % chars da linha mais larga
+    MaxWidth is 2 * MaxChars - 1,        % largura com espaços entre chars
+    forall(between(1, TotalRows, I), (
+        RowChars is 2 * I - 1,
+        RowWidth is 2 * RowChars - 1,
+        Spaces is (MaxWidth - RowWidth) // 2,
+        ( I =< N ->
+            length(Prefix, I),
+            append(Prefix, _, Base),
+            make_row_up(Prefix, Row)
+        ;
+            K is I - N,
+            PrefixLen is N - K,
+            length(Prefix, PrefixLen),
+            append(Prefix, _, Base),
+            make_row_down(Prefix, RowChars, Row)
+        ),
+        print_spaces(Spaces),
+        atomic_list_concat(Row, ' ', Line),
+        writeln(Line)
+    )).
