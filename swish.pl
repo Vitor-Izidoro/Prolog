@@ -100,14 +100,14 @@ board(B, Min, Qtd) :-
 %================================================================
 %exercicio 5 --palindrome
 
-palindrome([]).
-palindrome([_]).
-palindrome([H|T]) :-
+palindromo([]).
+palindromo([_]).
+palindromo([H|T]) :-
     append(Miolo, [H], T),
-    palindrome(Miolo).
+    palindromo(Miolo).
 % Exemplo de consulta:
-% ?- palindrome([1, 2, 3, 2, 1]).
-% ?- palindrome([r,a, d, a, r]).
+% ?- palindromo([1, 2, 3, 2, 1]).
+% ?- palindromo([r,a, d, a, r]).
 
 % exercicio 6 -- fibonacci
 fib(N, F) :- fib(N, 0, 1, F).
