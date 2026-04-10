@@ -4,7 +4,7 @@
 % Vitor Rodrigues Izidoro
 
 % Exercício 1: Crie uma regra em Prolog que verifica se um número é par. 
-% REGRA: VERIFICA SE UM NÚMERO É PAR
+% número é par se ele for divisível por 2 (se resto da divisão por 2 for 0)
 par(Numero) :-
     0 =:= Numero mod 2.
 
@@ -15,10 +15,10 @@ par(Numero) :-
 % ============================================================
 
 % Exercício 2: Escreva uma regra que calcula o fatorial de um número.
-% Caso base: o fatorial de 0 é 1
+% caso base: o fatorial de 0 é 1
 fatorial(0, 1).
 
-% Recursão para calcular fatorial de um número N
+% recursão para calcular fatorial de um número N
 fatorial(N, F) :-
     N > 0,                % N deve ser maior que 0
     N1 is N - 1,          % Calcula N-1
@@ -155,7 +155,8 @@ mdc(A, B, MDC) :-
 %exercicio 8 --Crie uma regra que verifica se um número é primo.
 
 primo(2).
-% Para qualquer número N maior que 2, ele é primo SE NÃO for verdade que ele tem um divisor começando a testar do 2.
+% para qualquer número N maior que 2, SE NÃO for verdade
+% que ele tem um divisor começando a testar do 2, é primo.
 primo(N) :-
     N > 2,
     \+ tem_divisor(N, 2).
@@ -165,10 +166,11 @@ primo(N) :-
 tem_divisor(N, DivisorAtual) :-
    N mod DivisorAtual =:= 0.
 
-% Condição 2: Não dividiu? Tenta o próximo número.
+% Condição 2: não dividiu? tenta o próximo número.
 tem_divisor(N, DivisorAtual) :-
-    % Otimização matemática: só precisamos testar até a raiz quadrada de N.
-    % Se Divisor * Divisor ultrapassar N, não faz sentido continuar testando.
+    % só precisa testar até a raiz quadrada de N.
+    % se Divisor * Divisor ultrapassar N, não faz sentido 
+    % continuar testando.
     DivisorAtual * DivisorAtual < N,
     ProximoDivisor is DivisorAtual + 1,
     tem_divisor(N, ProximoDivisor).
@@ -181,9 +183,9 @@ tem_divisor(N, DivisorAtual) :-
 %exercicio 9 -- Escreva uma regra que verifica se uma palavra é um palíndromo.
 
 palindromo(Palavra) :-
-    string_chars(Palavra, Lista),    % Converte a string em uma lista de caracteres
-    reverse(Lista, Invertida),       % Inverte a lista
-    Lista == Invertida.              % Verifica se a original é igual à invertida
+    string_chars(Palavra, Lista),    % converte a string em % uma lista de caracteres
+    reverse(Lista, Invertida),       % inverte a lista
+    Lista == Invertida.              % verifica se a original é igual a lista invertida
 
 % Exemplo de consulta:
 % ?- palindromo(renner).    --- Resultado = true.
@@ -249,4 +251,3 @@ triangle(Base) :-
 
 % Exemplo de consulta:
 % ?- triangle([a, b, c]).
-
