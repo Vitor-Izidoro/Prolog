@@ -1,3 +1,8 @@
+% Alex Menegatti Secco
+% Bruno Betiatto Alves
+% Mariana de Castro
+% Vitor Rodrigues Izidoro
+
 % Exercício 1: Crie uma regra em Prolog que verifica se um número é par. 
 % REGRA: VERIFICA SE UM NÚMERO É PAR
 par(Numero) :-
@@ -34,7 +39,19 @@ lista_vazia([]).
 
 % ============================================================
 
-% exercicio 4 
+/* exercicio 4: Você recebe um tabuleiro N×N com um operador aritmético binário e um
+operando inteiro em cada quadrado. Você começa com 0 como valor atual, e escolhe um
+caminho que visita cada quadrado do tabuleiro exatamente uma vez. Para cada quadrado
+visitado, você realiza a operação no quadrado com o valor atual como operando esquerdo da
+operação, e o número no quadrado como operando direito, e continua com o resultado como
+o valor atual. No final do caminho, seu valor atual depende do caminho escolhido; este é o
+valor final do caminho. Você deve encontrar o valor final mínimo de todos os caminhos, e o
+número de caminhos que têm este valor final mínimo.
+Escreva um predicado board/3, que tem como primeiro argumento (entrada) o tabuleiro, e
+que unifica o valor final mínimo com o segundo argumento e o número de diferentes caminhos
+que têm este valor final mínimo com o terceiro argumento. Um caminho pode começar em
+qualquer quadrado, e dois quadrados subsequentes em um caminho devem se tocar por um
+lado dos quadrados. */
 
 % --- Predicado Principal ---
 % --- Operações ---
@@ -82,8 +99,6 @@ board(B, Min, Qtd) :-
     min_list(LIST, Min),
     aggregate_all(count, (member(X, LIST), X =:= Min), Qtd).
 
-
-
 %  consulta 
 
 % Tab = [[op(*,+1), op(+, 3), op(+,555), op(+, 3)],
@@ -98,7 +113,7 @@ board(B, Min, Qtd) :-
 
 
 %================================================================
-%exercicio 5 --palindrome
+%exercicio 5 --Crie uma regra que verifica se uma lista é uma palíndrome.
 
 palindrome([]).
 palindrome([_]).
@@ -109,7 +124,8 @@ palindrome([H|T]) :-
 % ?- palindrome([1, 2, 3, 2, 1]).
 % ?- palindrome([r,a, d, a, r]).
 
-% exercicio 6 -- fibonacci
+%==========================================
+% exercicio 6 -- Escreva uma regra que calcule o n-ésimo termo da sequência de Fibonacci.
 fib(N, F) :- fib(N, 0, 1, F).
 
 fib(0, A, _, A).
@@ -122,7 +138,9 @@ fib(N, A, B, F) :-
 % Exemplo de consulta:
 % ?- fib(10, F).    --- O resultado deve ser F = 55
 
-% exercicio 7 -- mdc
+%==============================================
+% exercicio 7 -- Implemente uma regra que encontre o maior divisor comum (MDC) de dois
+% números inteiros.
 
 mdc(A, 0, A) :- A > 0.
 mdc(A, B, MDC) :-
@@ -133,7 +151,8 @@ mdc(A, B, MDC) :-
 % Exemplo de consulta:
 % ?- mdc(48, 18, MDC).    --- O resultado deve ser MDC = 6
 
-%exercicio 8 --verificador de número primo
+%===============================================
+%exercicio 8 --Crie uma regra que verifica se um número é primo.
 
 primo(2).
 % Para qualquer número N maior que 2, ele é primo SE NÃO for verdade que ele tem um divisor começando a testar do 2.
@@ -144,7 +163,7 @@ primo(N) :-
 % --- REGRAS AUXILIARES DE DIVISÃO ---
 
 tem_divisor(N, DivisorAtual) :-
-    N mod DivisorAtual =:= 0.
+   N mod DivisorAtual =:= 0.
 
 % Condição 2: Não dividiu? Tenta o próximo número.
 tem_divisor(N, DivisorAtual) :-
@@ -153,22 +172,29 @@ tem_divisor(N, DivisorAtual) :-
     DivisorAtual * DivisorAtual < N,
     ProximoDivisor is DivisorAtual + 1,
     tem_divisor(N, ProximoDivisor).
-%exercicio 9 --palavra palindromo
 
-% Esta linha diz ao SWI-Prolog: "Trate aspas duplas como listas de caracteres"
-:- set_prolog_flag(double_quotes, chars).
+% Exemplo de consulta:
+% ?- primo(3).  --- Resultado = true.
+% ?- primo(6).  --- Resultado = false.
 
-% A regra recebe a string, que agora o Prolog entende como a lista [r, a, d, a, r]
-palindromo(PalavraString) :-
-    inverter_raiz(PalavraString, [], PalavraString).
+%======================================
+%exercicio 9 -- Escreva uma regra que verifica se uma palavra é um palíndromo.
 
-% O acumulador que inverte a lista recursivamente
-inverter_raiz([], Acumulador, Acumulador).
-inverter_raiz([Cabeca | Cauda], Acumulador, Resultado) :-
-    inverter_raiz(Cauda, [Cabeca | Acumulador], Resultado).
+palindromo(Palavra) :-
+    string_chars(Palavra, Lista),    % Converte a string em uma lista de caracteres
+    reverse(Lista, Invertida),       % Inverte a lista
+    Lista == Invertida.              % Verifica se a original é igual à invertida
+
+% Exemplo de consulta:
+% ?- palindromo(renner).    --- Resultado = true.
+% ?- palindromo(prolog).    --- Resultado = false.
 
 
-%exercicio 10 -- triangulo palindromo
+%=====================================
+/* exercicio 10 -- Escreva um predicado triangle/1, cujo argumento é uma lista L de caracteres
+(átomos de comprimento 1). O predicado desenha um conjunto de triângulos, que se
+encaixam uns dentro dos outros, e cujas circunferências são desenhadas com o caractere
+subsequente da lista L.*/
 
 % --- Linha de subida: palíndromo simples ---
 make_row_up([X], [X]) :- !.
