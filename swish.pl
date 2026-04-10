@@ -246,3 +246,7 @@ triangle(Base) :-
         atomic_list_concat(Row, ' ', Line),
         writeln(Line)
     )).
+
+% Exemplo de consulta:
+% ?- triangle([a, b, c]).
+
