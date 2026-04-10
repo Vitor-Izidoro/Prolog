@@ -26,7 +26,6 @@ fatorial(N, F) :-
 % ============================================================
 
 % Exercício 3: Crie uma regra que verifica se uma lista é vazia.
-% NÃO SEI SE TA CERTO, PARECE SIMPLES DEMAIS
 lista_vazia([]).
 
 % Exemplo de consulta:
@@ -91,9 +90,14 @@ board(B, Min, Qtd) :-
 %          [op(+, 3), op(+,2000), op(*,133), op(+,555)],
 %          [op(*, 0), op(*, 133), op(+, 2), op(+, 19)],
 %          [op(+, 3), op(+,1000), op(+, 2), op(*, 3)]],
-%   board_com_caminho(Tab, Minimo, Quantidade, CAMINHO).
+%   board(Tab, Minimo, Quantidade).
+% 
+% Tab = [[op(*,+1), op(+, 3)], 
+%      [op(+, 3), op(+,2000)]],
+% board(Tab, Minimo, Quantidade).
 
 
+%================================================================
 %exercicio 5 --palindrome
 
 palindrome([]).
