@@ -55,16 +55,16 @@ lado dos quadrados. */
 
 % --- Predicado Principal ---
 % --- Operações ---
+:- dynamic melhor_caminho/2.
+
 aplicar(VALUE1, op(+, VALUE2), RESULTADO) :- RESULTADO is VALUE1 + VALUE2.
 aplicar(VALUE1, op(-, VALUE2), RESULTADO) :- RESULTADO is VALUE1 - VALUE2.
 aplicar(VALUE1, op(*, VALUE2), RESULTADO) :- RESULTADO is VALUE1 * VALUE2.
 
-% --- Matriz ---
 get_cell(B, ROW, COLUMN, VALUE) :-
     nth1(ROW, B, LIST),
     nth1(COLUMN, LIST, VALUE).
 
-% --- Vizinhança ------
 vizinho(ROW, COLUMN, NEW_ROW, NEW_COLUMN, NUMBER_OF_LINES) :-
     (   NEW_ROW is ROW + 1, NEW_COLUMN = COLUMN
     ;   NEW_ROW is ROW - 1, NEW_COLUMN = COLUMN
@@ -75,7 +75,7 @@ vizinho(ROW, COLUMN, NEW_ROW, NEW_COLUMN, NUMBER_OF_LINES) :-
     NEW_ROW =< NUMBER_OF_LINES,   
     NEW_COLUMN >= 1,
     NEW_COLUMN =< NUMBER_OF_LINES.
-% --- Caminho ---
+
 caminho_hamiltoniano(_, NUMBER_OF_LINES, VISITATED, _, _, VALUE, VALUE) :-
     Total is NUMBER_OF_LINES * NUMBER_OF_LINES,
     length(VISITATED, Total).
@@ -87,18 +87,36 @@ caminho_hamiltoniano(B, NUMBER_OF_LINES, VISITATED, ROW, COLUMN, VAcum, VFin) :-
     aplicar(VAcum, Op, NV),
     caminho_hamiltoniano(B, NUMBER_OF_LINES, [(NEW_ROW, NEW_COLUMN)|VISITATED], NEW_ROW, NEW_COLUMN, NV, VFin).
 
-% --- Principal ---
 board(B, Min, Qtd) :-
     length(B, NUMBER_OF_LINES),
-    findall(VALUE, (
-        between(1, NUMBER_OF_LINES, ROW), between(1, NUMBER_OF_LINES, COLUMN),
+    retractall(melhor_caminho(_, _)),
+    asserta(melhor_caminho(inf, 0)),
+    (
+        between(1, NUMBER_OF_LINES, ROW), 
+        between(1, NUMBER_OF_LINES, COLUMN),
         get_cell(B, ROW, COLUMN, op(Op, Val)),
         aplicar(0, op(Op, Val), INICIAL_VALUE),
-        caminho_hamiltoniano(B, NUMBER_OF_LINES, [(ROW, COLUMN)], ROW, COLUMN, INICIAL_VALUE, VALUE)
-    ), LIST),
-    min_list(LIST, Min),
-    aggregate_all(count, (member(X, LIST), X =:= Min), Qtd).
+        caminho_hamiltoniano(B, NUMBER_OF_LINES, [(ROW, COLUMN)], ROW, COLUMN, INICIAL_VALUE, VALUE),
+        atualiza_melhor(VALUE),
+        fail 
+    ; 
+        true
+    ),
+    melhor_caminho(Min, Qtd),
+    Min \= inf.
 
+atualiza_melhor(V) :-
+    melhor_caminho(MinAtual, QtdAtual),
+    ( V < MinAtual ->
+        retract(melhor_caminho(MinAtual, QtdAtual)),
+        asserta(melhor_caminho(V, 1))
+    ; V =:= MinAtual ->
+        retract(melhor_caminho(MinAtual, QtdAtual)),
+        NovaQtd is QtdAtual + 1,
+        asserta(melhor_caminho(MinAtual, NovaQtd))
+    ; 
+        true
+    ).
 %  consulta 
 
 % Tab = [[op(*,+1), op(+, 3), op(+,555), op(+, 3)],
