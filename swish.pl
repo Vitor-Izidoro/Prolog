@@ -228,7 +228,7 @@ triangle_lines(Base, Lines) :-
     MaxChars is 2 * TotalRows - 1,
     MaxWidth is 2 * MaxChars - 1,
     
-    % Gera uma lista puramente lógica de índices [1, 2, 3, ..., TotalRows]
+    % Gera uma lista de índices [1, 2, 3, ..., TotalRows]
     numlist(1, TotalRows, Indices),
     
     % Mapeia cada índice para sua linha formatada correspondente
@@ -240,7 +240,6 @@ build_single_line(N, Base, MaxWidth, I, Line) :-
     RowWidth is 2 * RowChars - 1,
     Spaces is (MaxWidth - RowWidth) // 2,
     
-    % Delega a criação dos caracteres para as guardas lógicas
     extract_prefix_and_build_row(I, N, Base, RowChars, RowList),
     
     % Junta os espaços e a linha
@@ -262,7 +261,7 @@ extract_prefix_and_build_row(I, N, Base, RowChars, RowList) :-
     append(Prefix, _, Base),
     make_row_down(Prefix, RowChars, RowList).
 
-% 5. TRANSFORMAÇÃO DE DADOS (Pura e sem prints)
+% 5. TRANSFORMAÇÃO DE DADOS
 make_row_up(Prefix, Pal) :-
     reverse(Prefix, [_ | RevTail]),
     append(Prefix, RevTail, Pal).
@@ -283,7 +282,7 @@ format_line(SpacesCount, RowList, Line) :-
     length(SpaceList, SpacesCount),
     maplist(=('-'), SpaceList), % Popula a lista com traços
     
-    % Concatena tudo de forma declarativa
+    % Concatena
     atomic_list_concat(SpaceList, '', SpaceStr),
     atomic_list_concat(RowList, ' ', RowStr),
     atomic_list_concat([SpaceStr, RowStr], Line).
