@@ -216,13 +216,57 @@ palindromo(Palavra) :-
 encaixam uns dentro dos outros, e cujas circunferências são desenhadas com o caractere
 subsequente da lista L.*/
 
-% --- Linha de subida: palíndromo simples ---
-make_row_up([X], [X]) :- !.
-make_row_up(Prefix, Pal) :-
-    reverse(Prefix, [_ | Rev]),
-    append(Prefix, Rev, Pal).
+% 1. PREDICADO PRINCIPAL
+triangle(Base) :-
+    triangle_lines(Base, Lines),
+    maplist(writeln, Lines).
 
-% --- Linha de descida: borda + repetição + espelho ---
+% 2. RELAÇÃO DECLARATIVA: Descreve como "Base" se transforma em "Lines".
+triangle_lines(Base, Lines) :-
+    length(Base, N),
+    TotalRows is 2 * N - 1,
+    MaxChars is 2 * TotalRows - 1,
+    MaxWidth is 2 * MaxChars - 1,
+    
+    % Gera uma lista puramente lógica de índices [1, 2, 3, ..., TotalRows]
+    numlist(1, TotalRows, Indices),
+    
+    % Mapeia cada índice para sua linha formatada correspondente
+    maplist(build_single_line(N, Base, MaxWidth), Indices, Lines).
+
+% 3. CONSTRUTOR DE LINHA: Relaciona um índice I à sua String resultante.
+build_single_line(N, Base, MaxWidth, I, Line) :-
+    RowChars is 2 * I - 1,
+    RowWidth is 2 * RowChars - 1,
+    Spaces is (MaxWidth - RowWidth) // 2,
+    
+    % Delega a criação dos caracteres para as guardas lógicas
+    extract_prefix_and_build_row(I, N, Base, RowChars, RowList),
+    
+    % Junta os espaços e a linha
+    format_line(Spaces, RowList, Line).
+
+% Metade Superior do triângulo
+extract_prefix_and_build_row(I, N, Base, _RowChars, RowList) :-
+    I =< N, !, % O cut garante que as duas regras sejam mutuamente exclusivas
+    length(Prefix, I),
+    append(Prefix, _, Base),
+    make_row_up(Prefix, RowList).
+
+% Metade Inferior do triângulo
+extract_prefix_and_build_row(I, N, Base, RowChars, RowList) :-
+    I > N,
+    K is I - N,
+    PrefixLen is N - K,
+    length(Prefix, PrefixLen),
+    append(Prefix, _, Base),
+    make_row_down(Prefix, RowChars, RowList).
+
+% 5. TRANSFORMAÇÃO DE DADOS (Pura e sem prints)
+make_row_up(Prefix, Pal) :-
+    reverse(Prefix, [_ | RevTail]),
+    append(Prefix, RevTail, Pal).
+
 make_row_down(Prefix, TotalLen, Pal) :-
     reverse(Prefix, [_ | RevTail]),
     length(Prefix, PLen),
@@ -234,38 +278,16 @@ make_row_down(Prefix, TotalLen, Pal) :-
     append(Prefix, MiddleList, Tmp),
     append(Tmp, RevTail, Pal).
 
-% --- Espaços ---
-print_spaces(0) :- !.
-print_spaces(N) :-
-    N > 0, write('-'),
-    N1 is N - 1,
-    print_spaces(N1).
+% 6. FORMATAÇÃO: Transforma as listas de caracteres e traços em uma String final.
+format_line(SpacesCount, RowList, Line) :-
+    length(SpaceList, SpacesCount),
+    maplist(=('-'), SpaceList), % Popula a lista com traços
+    
+    % Concatena tudo de forma declarativa
+    atomic_list_concat(SpaceList, '', SpaceStr),
+    atomic_list_concat(RowList, ' ', RowStr),
+    atomic_list_concat([SpaceStr, RowStr], Line).
 
-% --- Predicado principal ---
-triangle(Base) :-
-    length(Base, N),
-    TotalRows is 2 * N - 1,
-    MaxChars is 2 * TotalRows - 1,       % chars da linha mais larga
-    MaxWidth is 2 * MaxChars - 1,        % largura com espaços entre chars
-    forall(between(1, TotalRows, I), (
-        RowChars is 2 * I - 1,
-        RowWidth is 2 * RowChars - 1,
-        Spaces is (MaxWidth - RowWidth) // 2,
-        ( I =< N ->
-            length(Prefix, I),
-            append(Prefix, _, Base),
-            make_row_up(Prefix, Row)
-        ;
-            K is I - N,
-            PrefixLen is N - K,
-            length(Prefix, PrefixLen),
-            append(Prefix, _, Base),
-            make_row_down(Prefix, RowChars, Row)
-        ),
-        print_spaces(Spaces),
-        atomic_list_concat(Row, ' ', Line),
-        writeln(Line)
-    )).
 
 % Exemplo de consulta:
 % ?- triangle([a, b, c]).
